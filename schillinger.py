@@ -131,25 +131,48 @@ class Grouping:
     def __init__(self):
         pass
     
+    # Type I
+    
     # returns -> [measures, tones]
-    def grouping_by_ab(self, a,b):
+    def type_I_grouping_by_ab(self, a,b):
         group_ab = [a*b,a*b]
         measures = int(group_ab[0]/group_ab[1])
         tones = int(a*b/measures)
         return [measures, tones]
     
-    def grouping_by_a(self, a,b):
+    def type_I_grouping_by_a(self, a,b):
         group_a = [a*b,a]
         measures = int(group_a[0]/group_a[1])
         tones = int(a*b/measures)
         return [measures, tones]
     
-    def grouping_by_b(self, a,b):
+    def type_I_grouping_by_b(self, a,b):
         group_b = [a*b,b]
         measures = int(group_b[0]/group_b[1])
         tones = int(a*b/measures)
         return [measures, tones]
-
+    
+    # Type II
+    
+    def type_II_grouping_by_a(self, a,b):
+        group = [a*a, a]
+        measures = group[0]/group[1]
+        tones = int(a*a)
+        return [measures, int(tones/measures)]
+    
+    def type_II_grouping_by_aa(self, a,b):
+        group = [a*a, a*a]
+        measures = group[0]/group[1]
+        tones = int(a*a)
+        return [measures, int(tones/measures)]
+    
+    def type_II_grouping_by_b(self, a,b):
+        group = [a*a, b]
+        measures = group[0]/group[1]
+        tones = int(a*a)
+        return [measures, int(tones/measures)]
+    
+    ## Pairs
     
     def grouping_by_pairs(self, r, r_, a, b):
         
