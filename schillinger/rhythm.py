@@ -1,7 +1,22 @@
+'''
+    Schillinger System
+    Book I - Rhythm
+    c. Konstantin Svechtarov 2017
+    
+'''
 import numpy as np
 
-class SchillingerRythm_I:
-
+class Type_I:
+    '''
+    
+    Schillinger Rhythm Type I: 
+        takes a list of fractions f.e [a,b] or [a,b,c]
+    stores lists of:
+        [common_product], [[generators]], [resultant]
+    and the complementary results:
+        [[complementary_generators]], [complementary_resultant]
+        
+    '''
     common_product = []
     generators = []
     resultant = []
@@ -57,8 +72,16 @@ class SchillingerRythm_I:
 
 ##schillinger II
 
-class SchillingerRythm_II:
+class Type_II:
+    '''
     
+    Schillinger Rhythm Type II: 
+        takes a list of a fraction f.e [a,b]
+            where a > b!
+    stores lists of:
+        [common_product], [major_generator], [[minor_generators]], [resultant]
+        
+    '''
     common_product = []
     major_generator = []
     minor_generators = []
@@ -67,9 +90,9 @@ class SchillingerRythm_II:
     def __init__(self, fraction):
         
         if len(fraction) > 2:
-            raise ValueError('only 2 fractions!')
+            raise ValueError('only one fraction! f.e [3,2]')
         if fraction[1] > fraction[0]:
-            raise ValueError('for Type II fraction 1 must be greater!')
+            raise ValueError('for Type II fraction a must be greater then b!')
             
         self.common_product = []
         self.major_generator = []
@@ -122,16 +145,31 @@ class SchillingerRythm_II:
 # Grouping by pairs
 # Balance 
 
-balance = []
-expansion = []
-contraction = []
+
 
 class Grouping:
+    '''
+    
+    Grouping:
+    for resultant of Type I use:
+        type_I_*
+    for resultant of Type II use:
+        type_II_*
+    returns [measures, tones]:
+        where measures a the total number of bars and tones are the units per bar.
+
+    '''
+    balance = []
+    expansion = []
+    contraction = []
     
     def __init__(self):
-        pass
-    
-    # Type I
+        
+        self.balance = []
+        self.expansion = []
+        self.contraction = []
+        
+    # for Type I
     
     # returns -> [measures, tones]
     def type_I_grouping_by_ab(self, a,b):
@@ -152,7 +190,7 @@ class Grouping:
         tones = int(a*b/measures)
         return [measures, tones]
     
-    # Type II
+    # for Type II
     
     def type_II_grouping_by_a(self, a,b):
         group = [a*a, a]
@@ -179,10 +217,10 @@ class Grouping:
         #Balance
         #if a > 2*b or 3*b
         if a > b*2:
-            devisor = a//b
+            divisor = a//b
             sum_r = sum(r)
             sum_r_ = sum(r_)
-            sd = sum_r*devisor
+            sd = sum_r*divisor
             rest = sum_r_ - sd
             rr = r*2
             self.balance = r_ + rr + [rest]
