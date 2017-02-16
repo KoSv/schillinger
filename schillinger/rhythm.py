@@ -6,6 +6,26 @@
 '''
 import numpy as np
 
+
+def slice_list(result):
+    if len(result) % 2 == 0:
+        
+        firstpart, secondpart = result[:int(len(result)/2)], result[int(len(result)/2):]
+    else:
+        firstpart, secondpart = result[:int(len(result)/2)+1], result[int(len(result)/2):]
+        
+    return [firstpart,secondpart]
+
+def slice_by_fraction(result, fraction):
+    if len(result) % 2 == 0:
+        
+        firstpart, secondpart = result[:int(len(result)*fraction)], result[int(len(result)*fraction):]
+    else:
+        firstpart, secondpart = result[:int(len(result)*fraction)], result[int(len(result)*fraction):]
+        
+    return [firstpart,secondpart]
+
+
 class Type_I:
     '''
     
