@@ -6,6 +6,7 @@
 '''
 import numpy as np
 import itertools
+import random
 
 class PitchGroup:
     
@@ -98,4 +99,34 @@ class PitchGroup:
 
             expansion_variables.append(new_notes)
         return expansion_variables
+    
+    def chordify_scale(self, scala, voices):
+        new_list=[]
+        for r in range(len(scala)):
+            l = []
+            for d in range(voices):
+                l.append(scala[(r+d)%len(scala)])
+            new_list.append(l)
+        return new_list
+    
+    def harmonize(self, note_seq, chordified_scale):
+        # erstma mit choice
+        array = []
+        for i, note in enumerate(note_seq):
+            temp_cord = []
+            for chord in chordified_scale:
+                if note in chord:
+                    temp_cord.append(chord)
+            array.append([note,random.choice(temp_cord)])
+        return array
+    
+    def clean_harmony(self,harmonized_part):
+        cleaned_list = []
+        for i,p in enumerate(harmonized_part):
+            cl = []
+            for l in p[1]:
+                if l != p[0]:
+                    cl.append(l)
+            cleaned_list.append([p[0],cl])
+        return cleaned_list
 
