@@ -5,6 +5,7 @@
     
 '''
 import numpy as np
+from fractions import Fraction
 
 
 def slice_list(result):
@@ -256,5 +257,101 @@ class Grouping:
         self.contraction = r_ + r
         #print(contraction)
     
+class CTS:
+    '''
+        schillinger coordination of time structures
+        inputs [parts(or instruments)] [part order] [durations_pattern] [attack_pattern]
+        returns [patttern lenght(not needed)] [[rhythm pattern array]] [[bar measures]]
+        
+    '''
+    return_values = []
+
+    def __init__(self, parts, order_of_parts, durations_pattern, attack_pattern):
+        
+        self.parts = parts
+        self.order_of_parts = order_of_parts
+
+
+        self.aa = attack_pattern
+        self.PLi = parts
+        self.PLa = len(self.aa)
+        self.Nip = len(durations_pattern)*sum(attack_pattern)
+        self.A = [self.aa]*self.PLi
+
+        self.instrument_parts = [[] for x in range(len(self.A))]
+        count = 0
+        for i,e in enumerate(self.A):
+            for r in e:
+                self.instrument_parts[count%len(self.A)].append(r)
+                count+=1
+
+        self.durations_array = []
+        for i in range(self.Nip):
+            self.durations_array.append(durations_pattern[i%len(durations_pattern)])
+            pass
+        
+        ##
+        ar = self.generate_binary_test()
+        fa = self.brainfuck_algo(ar[1])
+
+        bars = int(len(self.durations_array)/len(durations_pattern))
+        
+        f = Fraction(bars,4)
+        
+        pattern_len  = sum(durations_pattern) # not needed
+        
+        self.return_values = [pattern_len, fa, [f.numerator,f.denominator]]
     
+    def get_values(self):
+        return self.return_values
+        
+    def generate_binary_test(self):
+        binary_array = [[0 for x in range(self.Nip)] for x in range(self.PLi)]
+        attacks_array = [[0 for x in range(self.Nip)] for x in range(self.PLi)]
+        count = 0
+        while count < self.Nip:
+            for r in range(self.PLa):
+                for x in range(self.PLi):
+                    for y in range(self.instrument_parts[x][r]):
+                        binary_array[self.order_of_parts[x]][count] = 1
+                        attacks_array[self.order_of_parts[x]][count] = self.durations_array[count]
+                        if count >= self.Nip-1:
+                            return [binary_array, attacks_array]
+                        count+=1
+        return [binary_array, attacks_array]
+
+    
+
+    def brainfuck_algo(self,ata):
+        flag = False
+        test_array = [[] for x in range(self.PLi)]
+        for op in self.order_of_parts:
+
+            start_point = 0
+            summe = 0
+            for i, o in enumerate(ata[op]):
+
+                if o is 0:
+                    if not flag:
+                        start_point = i-1
+                        summe = 0
+                        flag = True
+                    for p in range(self.PLi):
+                        p = (p + op)%self.PLi
+                        summe += ata[p][i]
+                else:
+                    if flag:
+                        flag = False
+                        test_array[op].append(ata[op][start_point] + summe)
+                    else:
+                        if i > 0:
+                            test_array[op].append(ata[op][i-1])
+
+            ## end fill up
+            if flag:
+                test_array[op].append(ata[op][start_point] + summe)
+            else:
+                test_array[op].append(ata[op][i])
+
+        return test_array
     
