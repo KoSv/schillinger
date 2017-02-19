@@ -260,13 +260,15 @@ class Grouping:
 class CTS:
     '''
         schillinger coordination of time structures
-        inputs [parts(or instruments)] [part order] [durations_pattern] [attack_pattern]
-        returns [patttern lenght(not needed)] [[rhythm pattern array]] [[bar measures]]
+        inputs [parts(or instruments)] [part order] [attack_pattern] [durations_pattern] 
+            -> f.e. (4, [0,1,2,3], [1,3,1], [3,2,1,1,2,3])
+        get_values()
+            returns [pattern lenght(not needed with music21)] [[rhythm pattern arrays]] [[bar measures as fraction]]
         
     '''
     return_values = []
 
-    def __init__(self, parts, order_of_parts, durations_pattern, attack_pattern):
+    def __init__(self, parts, order_of_parts, attack_pattern, durations_pattern):
         
         self.parts = parts
         self.order_of_parts = order_of_parts

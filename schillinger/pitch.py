@@ -120,6 +120,17 @@ class PitchGroup:
             array.append([note,random.choice(temp_cord)])
         return array
     
+    def harmonize_canonical(self, note_seq, chordified_scale):
+        # only top note chooses harmony
+        array = []
+        for i, note in enumerate(note_seq):
+            temp_cord = []
+            for chord in chordified_scale:
+                if note == chord[-1]:
+                    temp_cord.append(chord)
+            array.append([note,random.choice(temp_cord)])
+        return array
+    
     def clean_harmony(self,harmonized_part):
         cleaned_list = []
         for i,p in enumerate(harmonized_part):
