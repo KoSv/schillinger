@@ -29,7 +29,7 @@ def get_whole_sequence(melody_notes, init_scales, voices, theme_expansion, scale
 
         chordified_scale = SPG.chordify_scale(scale_, voices)
 
-        note_sequence = note_sequence_all_expansions[theme_expansion]
+        note_sequence = note_sequence_all_expansions[theme_expansion%len(note_sequence_all_expansions)]
 
         harmonized_note_sequence = SPG.harmonize(note_sequence, chordified_scale)
         
