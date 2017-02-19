@@ -36,6 +36,25 @@ def get_whole_sequence(melody_notes, init_scales, voices, theme_expansion, scale
         cleaned_sequence = SPG.clean_harmony(harmonized_note_sequence)
         
         harmonized_note_sequence_array.append(cleaned_sequence)
+        '''
+        print("note_sequence_all_expansions")
+        print(note_sequence_all_expansions)
+        print("scale_expansion")
+        print(scale_expansion)
+        print("scale_")
+        print(scale_)
+        print("chordified_scale")
+        print(chordified_scale)
+        print("note_sequence")
+        print(note_sequence)
+        print("harmonized_note_sequence")
+        print(harmonized_note_sequence)
+        print("cleaned_sequence")
+        print(cleaned_sequence)
+        print("harmonized_note_sequence_array")
+        print(harmonized_note_sequence_array)
+        '''
+        
         
     return harmonized_note_sequence_array
 
