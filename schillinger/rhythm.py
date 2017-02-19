@@ -6,6 +6,7 @@
 '''
 import numpy as np
 from fractions import Fraction
+import random
 
 
 def slice_list(result):
@@ -18,6 +19,7 @@ def slice_list(result):
     return [firstpart,secondpart]
 
 def slice_by_fraction(result, fraction):
+    
     if len(result) % 2 == 0:
         
         firstpart, secondpart = result[:int(len(result)*fraction)], result[int(len(result)*fraction):]
@@ -25,6 +27,24 @@ def slice_by_fraction(result, fraction):
         firstpart, secondpart = result[:int(len(result)*fraction)], result[int(len(result)*fraction):]
         
     return [firstpart,secondpart]
+
+def get_random_attack_combination(attack_sequence):
+    
+    devisible_list = []
+    sum_sr = sum(attack_sequence)
+    for i in range(1,sum_sr):
+        if sum_sr % i == 0:
+            devisible_list.append(i)
+    
+    return_attack_array = []
+    while sum(return_attack_array) <= sum_sr:
+        random_num = random.choice(devisible_list)
+        return_attack_array.append(random_num)
+        for i in devisible_list:
+            if sum(return_attack_array) + i > sum_sr:
+                devisible_list.remove(i)
+        if sum(return_attack_array) >= sum_sr:
+            return return_attack_array
 
 
 class Type_I:
