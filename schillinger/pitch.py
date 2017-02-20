@@ -100,6 +100,36 @@ def get_whole_sequence_canonical(melody_notes, init_scales, voices, theme_expans
         
     return harmonized_note_sequence_array
 
+def get_whole_sequence_bass(melody_notes, init_scales, voices, theme_expansion, scale_expansion_amount):
+    '''
+        convert multiple note seqeunces plus scales to a harmonized stream
+        
+        gets a [[melody_notes]] [[init_scales]] int(voices) int(theme_expansion) int(scale_expansion_amount default=1!)
+        returns hatmonizes array [[melody1[chords1]] [melody2[chords2]] ... [melodyN[chordsN]]]
+    '''
+    SPG = PitchGroup()
+    harmonized_note_sequence_array = []
+    
+    for i in range(len(melody_notes)):
+        
+        note_sequence_all_expansions = SPG.translate_notes_to_expansions(melody_notes[i], init_scales[i])
+
+        scale_expansion = SPG.expansions(init_scales[i])
+
+        scale_ = scale_expansion[scale_expansion_amount] 
+
+        chordified_scale = SPG.chordify_scale(scale_, voices)
+
+        note_sequence = note_sequence_all_expansions[theme_expansion%len(note_sequence_all_expansions)]
+
+        harmonized_note_sequence = SPG.harmonize_bass(note_sequence, chordified_scale)
+        
+        cleaned_sequence = SPG.clean_harmony(harmonized_note_sequence)
+        
+        harmonized_note_sequence_array.append(cleaned_sequence)   
+        
+    return harmonized_note_sequence_array
+
 
 class PitchGroup:
     
@@ -223,6 +253,19 @@ class PitchGroup:
                 if note == chord[-1]:
                     temp_cord.append(chord)
             array.append([note,random.choice(temp_cord)])
+        return array
+    
+    def harmonize_bass(self, note_seq, chordified_scale):
+        # only top note chooses harmony
+        array = []
+        for i, note in enumerate(note_seq):
+            temp_cord = []
+            for chord in chordified_scale:
+                if note == chord[0]:
+                    #print(note, chord)
+                    temp_cord.append(chord)
+                    array.append([note,random.choice(temp_cord)])
+                    break
         return array
     
     def clean_harmony(self,harmonized_part):
