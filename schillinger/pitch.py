@@ -9,6 +9,37 @@ import itertools
 import random
 
 
+def diatonic_cicles_with_coeficients(scale, cycles, coef):
+    '''
+        *belongs to melody module*
+        diatonic_cicles_with_coeficients(scale,[C3],[1]) for one scale
+        diatonic_cicles_with_coeficients(test_scale,[C3,C5],*[2,1]*) for combinations
+        warning:
+        *[n!,n!]* must be the length of the cycles otherwise it produces scrap
+        
+    '''
+    sum_arr = []
+    #init & fill in first element
+    last_element = scale[0]
+    sum_arr.append(last_element)
+    last_element_idx = 0
+    
+    length = sum(coef)*len(scale)
+    count = 0
+    i = 0
+    for i in range(length):
+        coef_iterator = i%len(coef)
+        cycles_iterator = coef_iterator % len(cycles)
+        for c in range(coef[coef_iterator]):
+            last_element_idx = cycles[cycles_iterator].index(last_element)
+            last_element = cycles[cycles_iterator][(last_element_idx+1)%len(scale)]
+            sum_arr.append(last_element)
+            #print(coef_iterator, cycles_iterator, last_element_idx, last_element, cycles[cycles_iterator] )
+            if count >= length-1:
+                return sum_arr
+            count += 1
+        i += 1
+
 def get_whole_sequence(melody_notes, init_scales, voices, theme_expansion, scale_expansion_amount):
     '''
         convert multiple note seqeunces plus scales to a harmonized stream
@@ -35,28 +66,40 @@ def get_whole_sequence(melody_notes, init_scales, voices, theme_expansion, scale
         
         cleaned_sequence = SPG.clean_harmony(harmonized_note_sequence)
         
-        harmonized_note_sequence_array.append(cleaned_sequence)
-        '''
-        print("note_sequence_all_expansions")
-        print(note_sequence_all_expansions)
-        print("scale_expansion")
-        print(scale_expansion)
-        print("scale_")
-        print(scale_)
-        print("chordified_scale")
-        print(chordified_scale)
-        print("note_sequence")
-        print(note_sequence)
-        print("harmonized_note_sequence")
-        print(harmonized_note_sequence)
-        print("cleaned_sequence")
-        print(cleaned_sequence)
-        print("harmonized_note_sequence_array")
-        print(harmonized_note_sequence_array)
-        '''
-        
+        harmonized_note_sequence_array.append(cleaned_sequence)   
         
     return harmonized_note_sequence_array
+
+def get_whole_sequence_canonical(melody_notes, init_scales, voices, theme_expansion, scale_expansion_amount):
+    '''
+        convert multiple note seqeunces plus scales to a harmonized stream
+        
+        gets a [[melody_notes]] [[init_scales]] int(voices) int(theme_expansion) int(scale_expansion_amount default=1!)
+        returns hatmonizes array [[melody1[chords1]] [melody2[chords2]] ... [melodyN[chordsN]]]
+    '''
+    SPG = PitchGroup()
+    harmonized_note_sequence_array = []
+    
+    for i in range(len(melody_notes)):
+        
+        note_sequence_all_expansions = SPG.translate_notes_to_expansions(melody_notes[i], init_scales[i])
+
+        scale_expansion = SPG.expansions(init_scales[i])
+
+        scale_ = scale_expansion[scale_expansion_amount] 
+
+        chordified_scale = SPG.chordify_scale(scale_, voices)
+
+        note_sequence = note_sequence_all_expansions[theme_expansion%len(note_sequence_all_expansions)]
+
+        harmonized_note_sequence = SPG.harmonize_canonical(note_sequence, chordified_scale)
+        
+        cleaned_sequence = SPG.clean_harmony(harmonized_note_sequence)
+        
+        harmonized_note_sequence_array.append(cleaned_sequence)   
+        
+    return harmonized_note_sequence_array
+
 
 class PitchGroup:
     
