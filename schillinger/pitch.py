@@ -42,7 +42,7 @@ def diatonic_cicles_with_coeficients(scale, cycles, coef):
 
 def get_whole_sequence(melody_notes, init_scales, voices, theme_expansion, scale_expansion_amount):
     '''
-        convert multiple note seqeunces plus scales to a harmonized stream
+        convert multiple note sequences plus the corresponding scales to harmonized stream
         
         gets a [[melody_notes]] [[init_scales]] int(voices) int(theme_expansion) int(scale_expansion_amount default=1!)
         returns hatmonizes array [[melody1[chords1]] [melody2[chords2]] ... [melodyN[chordsN]]]
@@ -102,7 +102,7 @@ def get_whole_sequence_canonical(melody_notes, init_scales, voices, theme_expans
 
 def get_whole_sequence_bass(melody_notes, init_scales, voices, theme_expansion, scale_expansion_amount):
     '''
-        convert multiple note seqeunces plus scales to a harmonized stream
+        convert multiple note sequences plus the corresponding scales to harmonized stream
         
         gets a [[melody_notes]] [[init_scales]] int(voices) int(theme_expansion) int(scale_expansion_amount default=1!)
         returns hatmonizes array [[melody1[chords1]] [melody2[chords2]] ... [melodyN[chordsN]]]
@@ -256,7 +256,6 @@ class PitchGroup:
         return array
     
     def harmonize_bass(self, note_seq, chordified_scale):
-        # only top note chooses harmony
         array = []
         for i, note in enumerate(note_seq):
             temp_cord = []
