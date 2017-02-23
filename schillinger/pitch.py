@@ -130,7 +130,8 @@ def get_whole_sequence_bass(melody_notes, init_scales, voices, theme_expansion, 
 
             harmonized_note_sequence_array.append(cleaned_sequence)   
         except:
-            print("note skipped not in scale!", melody_notes[i])
+            scale_expansion = SPG.expansions(init_scales[i])
+            print("note skipped not in scale!", melody_notes[i],scale_expansion)
         
     return harmonized_note_sequence_array
 
@@ -263,6 +264,7 @@ class PitchGroup:
         array = []
         for i, note in enumerate(note_seq):
             temp_cord = []
+            #print(note)
             for chord in chordified_scale:
                 if note == chord[0]:
                     #print(note, chord)
