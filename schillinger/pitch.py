@@ -9,11 +9,12 @@ import itertools
 import random
 
 
-def diatonic_cicles_with_coeficients(scale, cycles, coef):
+def pitch_cicles(scale, cycles, coef):
     '''
+    old_name == diatonic_cicles_with_coeficients()
         *belongs to melody module*
         diatonic_cicles_with_coeficients(scale,[C3],[1]) for one scale
-        diatonic_cicles_with_coeficients(test_scale,[C3,C5],*[2,1]*) for combinations
+        diatonic_cicles_with_coeficients(st_scale,[C3,C5],*[2,1]*) for combinations
         warning:
         *[n!,n!]* must be the length of the cycles otherwise it produces scrap
         
@@ -135,6 +136,25 @@ def get_whole_sequence_bass(melody_notes, init_scales, voices, theme_expansion, 
         
     return harmonized_note_sequence_array
 
+# EXPANSIONS
+def expansions(units):
+    expansions_len = len(units)
+    expansion_array = []
+    for l in range(1,expansions_len):
+        temp = []
+        for i,e in enumerate(units):
+            x = (i*l)%len(units)
+            u = units[x]
+            if u in temp:
+                x = (x+1)%expansions_len
+                u = units[x]
+                temp.append(u)
+            else:
+                temp.append(u)
+        expansion_array.append(temp)      
+    return expansion_array
+
+
 
 class PitchGroup:
     
@@ -253,23 +273,22 @@ class PitchGroup:
         # only top note chooses harmony
         array = []
         for i, note in enumerate(note_seq):
-            temp_cord = []
+            #temp_cord = []
             for chord in chordified_scale:
                 if note == chord[-1]:
-                    temp_cord.append(chord)
-            array.append([note,random.choice(temp_cord)])
+                    array.append(chord)
+            #array.append([note,random.choice(temp_cord)])
         return array
     
     def harmonize_bass(self, note_seq, chordified_scale):
         array = []
         for i, note in enumerate(note_seq):
-            temp_cord = []
+            #temp_cord = []
             #print(note)
             for chord in chordified_scale:
                 if note == chord[0]:
-                    #print(note, chord)
-                    temp_cord.append(chord)
-                    array.append([note,random.choice(temp_cord)])
+                    array.append(chord)
+                    #array.append([note,random.choice(temp_cord)])
                     break
         return array
     
