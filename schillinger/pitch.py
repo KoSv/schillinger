@@ -122,14 +122,16 @@ def get_whole_sequence_bass(melody_notes, init_scales, voices, theme_expansion, 
             scale_ = scale_expansion[scale_expansion_amount] 
 
             chordified_scale = SPG.chordify_scale(scale_, voices)
+            #print("0",chordified_scale)
 
             note_sequence = note_sequence_all_expansions[theme_expansion%len(note_sequence_all_expansions)]
-
+            
+            #print("1",note_sequence)
             harmonized_note_sequence = SPG.harmonize_bass(note_sequence, chordified_scale)
-
+            #print("2",harmonized_note_sequence)
             cleaned_sequence = SPG.clean_harmony(harmonized_note_sequence)
-
-            harmonized_note_sequence_array.append(cleaned_sequence)   
+            #print("3",cleaned_sequence)
+            harmonized_note_sequence_array.append(harmonized_note_sequence)   
         except:
             scale_expansion = SPG.expansions(init_scales[i])
             print("note skipped not in scale!", melody_notes[i],scale_expansion)
@@ -180,7 +182,7 @@ class PitchGroup:
     def counter_clock_rotation(self, units):
         # Rotate Lists
         def rotate(l, x):
-          return l[-x % len(l):] + l[:-x % len(l)]
+            return l[-x % len(l):] + l[:-x % len(l)]
         l = []
         #counterclock
         for i,e in enumerate(units):
