@@ -26,6 +26,7 @@ def pitch_cicles(scale, cycles, coef):
     last_element_idx = 0
     
     length = sum(coef)*len(scale)
+    #length = max([sum(coef),len(scale)])
     count = 0
     i = 0
     for i in range(length):
