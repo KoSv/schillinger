@@ -287,12 +287,22 @@ class CTS:
         
     '''
     return_values = []
-
+    
+    order_of_parts = []
+    result = []
+    metric = []
+    binaries = []
+    
+    #########
+    ## HELPERS
+    linear_sequence = []
+    start_pauses = []
+    #####
+    
     def __init__(self, parts, order_of_parts, attack_pattern, durations_pattern):
         
         self.parts = parts
         self.order_of_parts = order_of_parts
-
 
         self.aa = attack_pattern
         self.PLi = parts
@@ -313,7 +323,9 @@ class CTS:
             pass
         
         ##
+        #print(self.durations_array)
         ar = self.generate_binary_test()
+        #print(ar)
         fa = self.brainfuck_algo(ar[1])
 
         bars = int(len(self.durations_array)/len(durations_pattern))
@@ -321,9 +333,15 @@ class CTS:
         f = Fraction(bars,4)
         
         pattern_len  = sum(durations_pattern) # not needed
-        
         self.return_values = [pattern_len, fa, [f.numerator,f.denominator]]
-    
+        
+        self.result = fa
+        self.metric = [f.numerator,f.denominator]
+        self.binaries = ar[0]
+        
+        self.linear_sequence = self.convert_to_linear_seq()
+        self.start_pauses = self.convert_start_note_pauses()
+        
     def get_values(self):
         return self.return_values
         
@@ -376,4 +394,35 @@ class CTS:
                 test_array[op].append(ata[op][i])
 
         return test_array
+    
+    def convert_to_linear_seq(self):
+        
+        sequence = []
+        
+        active_part_counters = [0]*self.PLi
+        for a in range(self.Nip):
+            for part_num in range(self.PLi):
+                if self.binaries[part_num][a]==1:
+                    temp_counter = active_part_counters[part_num]
+                
+                    if part_num != self.order_of_parts[0]:
+                        temp_counter = temp_counter+1
+                    
+                    sequence.append([part_num, self.result[part_num][temp_counter]])
+                    active_part_counters[part_num]+=1
+                
+        return sequence
+    
+    def convert_start_note_pauses(self):
+
+        ##convert_start_note_pauses([0,1,2]],[[...],[...]])
+        #returns [-1, 1, 6]) -> -1 is no pause!
+        num_parts = self.PLi
+        start_pauses = [-1]*num_parts
+         #fill in pauses
+        for i,e in enumerate(self.result):
+            if i != self.order_of_parts[0]:
+                start_pauses[i] = e[0]
+
+        return start_pauses
     

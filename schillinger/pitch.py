@@ -138,7 +138,45 @@ def get_whole_sequence_bass(melody_notes, init_scales, voices, theme_expansion, 
             print("note skipped not in scale!", melody_notes[i],scale_expansion)
         
     return harmonized_note_sequence_array
+def get_whole_sequence_melody(melody_notes, init_scales, voices, theme_expansion, scale_expansion_amount):
+    '''
+        convert multiple note sequences plus the corresponding scales to harmonized stream
+        
+        gets a [[melody_notes]] [[init_scales]] int(voices) int(theme_expansion) int(scale_expansion_amount default=1!)
+        returns hatmonizes array [[melody1[chords1]] [melody2[chords2]] ... [melodyN[chordsN]]]
+    '''
+    SPG = PitchGroup()
+    harmonized_note_sequence_array = []
+    
+    for i in range(len(melody_notes)):
+        clock_position = i
+        try:
+        
+            note_sequence_all_expansions = SPG.translate_notes_to_expansions(melody_notes[i], init_scales[i])
+        
 
+            scale_expansion = SPG.expansions(init_scales[i])
+
+            scale_ = scale_expansion[scale_expansion_amount] 
+
+            chordified_scale = SPG.chordify_scale(scale_, voices)
+            #print("0",chordified_scale)
+
+            note_sequence = note_sequence_all_expansions[theme_expansion%len(note_sequence_all_expansions)]
+            
+            #print("1",note_sequence)
+            harmonized_note_sequence = SPG.harmonize(note_sequence, chordified_scale)
+            
+            #harmonized_note_sequence = SPG.harmonize_note_clockwise(melody_notes[i], chordified_scale, clock_position)
+            #print("2",harmonized_note_sequence)
+            cleaned_sequence = SPG.clean_harmony(harmonized_note_sequence)
+            #print("3",cleaned_sequence)
+            harmonized_note_sequence_array.append(harmonized_note_sequence)   
+        except:
+            scale_expansion = SPG.expansions(init_scales[i])
+            print("note skipped not in scale!", melody_notes[i],scale_expansion)
+        
+    return harmonized_note_sequence_array
 # EXPANSIONS
 def expansions(units):
     expansions_len = len(units)
@@ -148,12 +186,13 @@ def expansions(units):
         for i,e in enumerate(units):
             x = (i*l)%len(units)
             u = units[x]
-            if u in temp:
+            while u in temp:
+                #if u in temp:
                 x = (x+1)%expansions_len
                 u = units[x]
-                temp.append(u)
-            else:
-                temp.append(u)
+            temp.append(u)
+            #else:
+            #    temp.append(u)
         expansion_array.append(temp)      
     return expansion_array
 
@@ -226,12 +265,13 @@ class PitchGroup:
             for i,e in enumerate(units):
                 x = (i*l)%len(units)
                 u = units[x]
-                if u in temp:
+                while u in temp:
+                #if u in temp:
                     x = (x+1)%expansions_len
                     u = units[x]
-                    temp.append(u)
-                else:
-                    temp.append(u)
+                temp.append(u)
+                #else:
+                #    temp.append(u)
             expansion_array.append(temp)      
         return expansion_array
 
@@ -268,9 +308,20 @@ class PitchGroup:
             temp_cord = []
             for chord in chordified_scale:
                 if note in chord:
-                    temp_cord.append(chord)
-            array.append([note,random.choice(temp_cord)])
-        return array
+                    #array.append(chord)
+                    #temp_cord.append(chord)
+                    if chordified_scale[i][i%len(chordified_scale[i])==note]:
+                        #dummy.append(chordified_scale[i])
+                        temp_cord.append(chord)
+            array.append(random.choice(temp_cord))
+        return array#
+    
+    def harmonize_note_clockwise(self,note, chordified_scale, clock_position):
+        dummy = []
+        for i in range(len(chordified_scale)):
+            if chordified_scale[i][clock_position%len(chordified_scale[i])==note]:
+                dummy.append(chordified_scale[i])
+        return dummy
     
     def harmonize_canonical(self, note_seq, chordified_scale):
         # only top note chooses harmony
